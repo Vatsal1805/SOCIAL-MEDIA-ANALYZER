@@ -12,6 +12,13 @@ uploads/*
 # Logs
 *.log
 
+# Test files
+test-*.js
+debug-*.js
+
+# Tesseract training data
+*.traineddata
+
 # OS generated files
 .DS_Store
 Thumbs.db

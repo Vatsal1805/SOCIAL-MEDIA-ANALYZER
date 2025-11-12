@@ -3,33 +3,46 @@ const geminiService = require('../services/geminiService');
 
 const analyzeContent = async (req, res) => {
   try {
-    const { extractedText, fileName, fileType } = req.body;
+    const { text } = req.body;
 
-    if (!extractedText || !fileName || !fileType) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    if (!text || text.trim().length === 0) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'No text provided for analysis' 
+      });
     }
 
     // Get AI analysis
-    const analysisResult = await geminiService.analyzeContent(extractedText);
+    const analysisResult = await geminiService.analyzeContent(text.trim());
 
-    // Save to database
-    const analysis = new Analysis({
-      fileName,
-      fileType,
-      extractedText,
-      analysis: analysisResult
-    });
+    // Save to database (optional - for text analysis)
+    try {
+      const analysis = new Analysis({
+        fileName: 'text-input',
+        fileType: 'text',
+        extractedText: text.trim(),
+        analysis: analysisResult
+      });
 
-    await analysis.save();
+      await analysis.save();
+      console.log('Analysis saved to database');
+    } catch (dbError) {
+      console.warn('Failed to save to database:', dbError.message);
+      // Don't fail the request if database save fails
+    }
 
     res.json({
+      success: true,
       message: 'Content analyzed successfully',
       analysis: analysisResult
     });
 
   } catch (error) {
     console.error('Analysis error:', error);
-    res.status(500).json({ error: 'Analysis failed' });
+    res.status(500).json({ 
+      success: false,
+      error: 'Analysis failed: ' + error.message 
+    });
   }
 };
 

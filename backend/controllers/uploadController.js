@@ -2,28 +2,53 @@ const textExtractionService = require('../services/textExtractionService');
 
 const uploadFile = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'No files uploaded' 
+      });
     }
 
-    const filePath = req.file.path;
-    const fileType = req.file.mimetype.startsWith('image/') ? 'image' : 'pdf';
+    const results = [];
 
-    // Extract text from uploaded file
-    const extractedText = await textExtractionService.extractText(filePath, fileType);
+    // Process each uploaded file
+    for (const file of req.files) {
+      try {
+        const filePath = file.path;
+        const fileType = file.mimetype.startsWith('image/') ? 'image' : 'pdf';
+
+        // Extract text from uploaded file
+        const extractedText = await textExtractionService.extractText(filePath, fileType);
+
+        results.push({
+          fileName: file.originalname,
+          fileType,
+          extractedText
+        });
+
+      } catch (fileError) {
+        console.error('Error processing file', file.originalname, ':', fileError.message);
+        results.push({
+          fileName: file.originalname,
+          fileType: file.mimetype.startsWith('image/') ? 'image' : 'pdf',
+          extractedText: '',
+          error: 'Failed to extract text from this file'
+        });
+      }
+    }
 
     res.json({
-      message: 'File uploaded and text extracted successfully',
-      data: {
-        fileName: req.file.originalname,
-        fileType,
-        extractedText
-      }
+      success: true,
+      message: `Successfully processed ${results.length} files`,
+      results
     });
 
   } catch (error) {
-    console.error('Upload error:', error);
-    res.status(500).json({ error: 'File upload failed' });
+    console.error('Upload controller error:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'File upload failed: ' + error.message 
+    });
   }
 };
 

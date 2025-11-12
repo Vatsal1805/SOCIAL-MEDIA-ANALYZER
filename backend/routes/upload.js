@@ -4,7 +4,7 @@ const uploadController = require('../controllers/uploadController');
 
 const router = express.Router();
 
-// Upload route
-router.post('/', upload.single('file'), handleMulterError, uploadController.uploadFile);
+// Upload route - support multiple files
+router.post('/', upload.array('files', 10), handleMulterError, uploadController.uploadFile);
 
 module.exports = router;

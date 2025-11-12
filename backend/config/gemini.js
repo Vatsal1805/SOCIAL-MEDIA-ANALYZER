@@ -9,9 +9,9 @@ const initializeGemini = () => {
   return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 };
 
-// Gemini model configuration
+// Gemini model configuration  
 const GEMINI_CONFIG = {
-  model: "gemini-1.5-flash",  // Simple model name that should work
+  model: "models/gemini-2.0-flash",  // Alternative model (less busy)
   generationConfig: {
     temperature: 1.0,
     topK: 40,
@@ -32,25 +32,25 @@ const GEMINI_CONFIG = {
 
 // Analysis prompt template
 const ANALYSIS_PROMPT = `
-Analyze the following social media content and provide engagement improvement suggestions.
+Analyze this content for social media engagement potential: "{content}"
 
-Content: "{content}"
+Even if this isn't typical social media content, provide suggestions on how it could be adapted or improved for social media sharing.
 
-Please respond with a valid JSON object containing:
+Respond with ONLY a valid JSON object (no extra text or code blocks):
 {
   "engagementScore": (number 0-100),
   "suggestions": [
     {
-      "category": "string (e.g., 'Content', 'Hashtags', 'Timing')",
-      "suggestion": "string (specific actionable advice)",
-      "priority": "string (low/medium/high)"
+      "category": "Content/Hashtags/Timing/CTA",
+      "suggestion": "concise actionable advice (max 80 chars)",
+      "priority": "high/medium/low"
     }
   ],
-  "sentiment": "string (positive/negative/neutral)",
-  "keywords": ["array of relevant keywords"]
+  "sentiment": "positive/negative/neutral",
+  "keywords": ["max 5 relevant keywords"]
 }
 
-Focus on practical, actionable suggestions for better social media engagement.
+Always provide exactly 3 suggestions. Be creative for any content type.
 `;
 
 module.exports = {

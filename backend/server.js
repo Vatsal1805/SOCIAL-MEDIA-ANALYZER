@@ -6,7 +6,7 @@ require('dotenv').config();
 const connectDB = require('./config/database');
 
 const app = express();
-const PORT = parseInt(process.env.PORT) || 5000;
+const PORT = process.env.PORT || 3002;
 
 // Connect to MongoDB
 connectDB();
@@ -18,9 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/upload', require('./routes/upload'));
-// Routes
-app.use('/api/upload', require('./routes/upload'));
-app.use('/api', require('./routes/analyze'));
+app.use('/api/analyze', require('./routes/analyze'));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -33,12 +31,12 @@ app.get('/api/health', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('💥 Error:', err.message);
+  console.error('Server Error:', err.message);
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 API available at: http://localhost:${PORT}/api`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`API available at: http://localhost:${PORT}/api`);
 });

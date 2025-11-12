@@ -1,65 +1,92 @@
 const { initializeGemini, GEMINI_CONFIG, ANALYSIS_PROMPT } = require('../config/gemini');
-const mockAiService = require('./mockAiService');
 
 let genAI;
 
 // Initialize Gemini on module load
 try {
   genAI = initializeGemini();
-  console.log('✅ Gemini AI initialized successfully');
+  console.log('Gemini AI initialized successfully');
 } catch (error) {
-  console.error('❌ Gemini AI initialization failed:', error.message);
+  console.error('Gemini AI initialization failed:', error.message);
 }
 
 const analyzeContent = async (text) => {
-  console.log('🚀 Starting Gemini analysis...');
-  console.log('📝 Text length:', text.length);
-  console.log('🔑 API Key present:', !!process.env.GEMINI_API_KEY);
+  // Validate and truncate content if too long
+  if (text.length > 2000) {
+    console.log('Content truncated to 2000 characters');
+    text = text.substring(0, 2000) + '...';
+  }
   
   try {
     if (!genAI) {
       throw new Error('Gemini AI not initialized');
     }
-    console.log('✅ Gemini client available');
 
-    const model = genAI.getGenerativeModel({ 
-      model: GEMINI_CONFIG.model,
-      generationConfig: GEMINI_CONFIG.generationConfig,
-      safetySettings: GEMINI_CONFIG.safetySettings
-    });
+    // Try multiple models in case one is overloaded
+    const modelsToTry = [
+      GEMINI_CONFIG.model,
+      "models/gemini-2.0-flash-001", 
+      "models/gemini-flash-lite-latest",
+      "models/gemini-pro-latest"
+    ];
 
     const prompt = ANALYSIS_PROMPT.replace('{content}', text);
-    console.log('📝 Final prompt being sent to Gemini:', prompt.substring(0, 300) + '...');
 
-    console.log('🤖 Analyzing content with Gemini AI...');
-    const result = await model.generateContent(prompt);
-    console.log('📡 Gemini API call completed, getting response...');
+    let result;
+    let lastError;
+
+    for (let i = 0; i < modelsToTry.length; i++) {
+      const modelName = modelsToTry[i];
+      try {
+        const model = genAI.getGenerativeModel({ 
+          model: modelName,
+          generationConfig: GEMINI_CONFIG.generationConfig,
+          safetySettings: GEMINI_CONFIG.safetySettings
+        });
+
+        result = await model.generateContent(prompt);
+        break;
+      } catch (modelError) {
+        lastError = modelError;
+        if (i === modelsToTry.length - 1) {
+          throw lastError; // Throw the last error if all models fail
+        }
+      }
+    }
     
     const response = await result.response;
     const analysisText = response.text();
-    console.log('📋 Full Gemini response:', analysisText);
 
-    console.log('📝 Raw Gemini response:', analysisText.substring(0, 200) + '...');
+    // Check if response is empty
+    if (!analysisText || analysisText.trim().length === 0) {
+      throw new Error('Gemini API returned empty response - content may be filtered or invalid');
+    }
 
-    // Parse JSON from response
-    const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const parsedResult = JSON.parse(jsonMatch[0]);
-      console.log('✅ Successfully parsed Gemini response');
-      return parsedResult;
+    // Parse JSON from response - improved extraction
+    let cleanedResponse = analysisText;
+    
+    // Remove markdown code blocks if present
+    cleanedResponse = cleanedResponse.replace(/```json\s*/gi, '').replace(/```\s*$/gi, '');
+    
+    // Try to find complete JSON object
+    const openBrace = cleanedResponse.indexOf('{');
+    const closeBrace = cleanedResponse.lastIndexOf('}');
+    
+    if (openBrace !== -1 && closeBrace !== -1 && closeBrace > openBrace) {
+      const jsonString = cleanedResponse.substring(openBrace, closeBrace + 1);
+      try {
+        const parsedResult = JSON.parse(jsonString);
+        return parsedResult;
+      } catch (parseError) {
+        throw new Error('Invalid JSON in Gemini response');
+      }
     }
 
     throw new Error('No valid JSON found in Gemini response');
 
   } catch (error) {
-    console.error('❌ Gemini API error:', error.message);
-    console.error('🔍 Full error details:', error);
-    console.log('🔑 API Key status:', process.env.GEMINI_API_KEY ? 'Present' : 'Missing');
-    console.log('📝 Content being analyzed:', text.substring(0, 100) + '...');
-    
-    // Use mock AI service instead of static fallback
-    console.log('🎭 Switching to MOCK AI service...');
-    return await mockAiService.analyzeContent(text);
+    console.error('Gemini API error:', error.message);
+    throw new Error(`Gemini API failed: ${error.message}`);
   }
 };
 
