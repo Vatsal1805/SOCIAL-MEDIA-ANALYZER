@@ -12,10 +12,7 @@ const analyzeContent = async (req, res) => {
       });
     }
 
-    // Get AI analysis
     const analysisResult = await geminiService.analyzeContent(text.trim());
-
-    // Save to database (optional - for text analysis)
     try {
       const analysis = new Analysis({
         fileName: 'text-input',
@@ -28,7 +25,6 @@ const analyzeContent = async (req, res) => {
       console.log('Analysis saved to database');
     } catch (dbError) {
       console.warn('Failed to save to database:', dbError.message);
-      // Don't fail the request if database save fails
     }
 
     res.json({

@@ -1,6 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Initialize Gemini AI
 const initializeGemini = () => {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error('GEMINI_API_KEY is required in environment variables');
@@ -9,9 +8,8 @@ const initializeGemini = () => {
   return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 };
 
-// Gemini model configuration  
 const GEMINI_CONFIG = {
-  model: "models/gemini-2.0-flash",  // Alternative model (less busy)
+  model: "models/gemini-2.0-flash",
   generationConfig: {
     temperature: 1.0,
     topK: 40,
@@ -30,7 +28,6 @@ const GEMINI_CONFIG = {
   ],
 };
 
-// Analysis prompt template
 const ANALYSIS_PROMPT = `
 Analyze this content for social media engagement potential: "{content}"
 

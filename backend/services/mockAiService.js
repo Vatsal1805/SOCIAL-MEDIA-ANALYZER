@@ -1,12 +1,9 @@
-// Mock AI service for testing when Gemini API is not available
 const mockAnalyzeContent = async (text) => {
-  console.log('🎭 Using MOCK AI service (Gemini API unavailable)');
-  console.log('📝 Analyzing text:', text.substring(0, 100) + '...');
+  console.log('Using MOCK AI service (Gemini API unavailable)');
+  console.log('Analyzing text:', text.substring(0, 100) + '...');
   
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Generate realistic mock responses based on content
   const responses = [
     {
       engagementScore: Math.floor(Math.random() * 30) + 60, // 60-90
@@ -61,9 +58,8 @@ const mockAnalyzeContent = async (text) => {
     }
   ];
   
-  // Return random response
   const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-  console.log('✅ Mock analysis complete');
+  console.log('Mock analysis complete');
   return randomResponse;
 };
 
@@ -74,7 +70,7 @@ const extractKeywords = (text) => {
     .split(/\s+/)
     .filter(word => word.length > 3 && !commonWords.includes(word));
   
-  return [...new Set(words)].slice(0, 5); // Return up to 5 unique keywords
+  return [...new Set(words)].slice(0, 5);
 };
 
 module.exports = {

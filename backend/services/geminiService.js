@@ -2,7 +2,6 @@ const { initializeGemini, GEMINI_CONFIG, ANALYSIS_PROMPT } = require('../config/
 
 let genAI;
 
-// Initialize Gemini on module load
 try {
   genAI = initializeGemini();
   console.log('Gemini AI initialized successfully');
@@ -11,7 +10,6 @@ try {
 }
 
 const analyzeContent = async (text) => {
-  // Validate and truncate content if too long
   if (text.length > 2000) {
     console.log('Content truncated to 2000 characters');
     text = text.substring(0, 2000) + '...';
@@ -22,7 +20,6 @@ const analyzeContent = async (text) => {
       throw new Error('Gemini AI not initialized');
     }
 
-    // Try multiple models in case one is overloaded
     const modelsToTry = [
       GEMINI_CONFIG.model,
       "models/gemini-2.0-flash-001", 
@@ -57,18 +54,14 @@ const analyzeContent = async (text) => {
     const response = await result.response;
     const analysisText = response.text();
 
-    // Check if response is empty
     if (!analysisText || analysisText.trim().length === 0) {
       throw new Error('Gemini API returned empty response - content may be filtered or invalid');
     }
 
-    // Parse JSON from response - improved extraction
     let cleanedResponse = analysisText;
     
-    // Remove markdown code blocks if present
     cleanedResponse = cleanedResponse.replace(/```json\s*/gi, '').replace(/```\s*$/gi, '');
     
-    // Try to find complete JSON object
     const openBrace = cleanedResponse.indexOf('{');
     const closeBrace = cleanedResponse.lastIndexOf('}');
     
