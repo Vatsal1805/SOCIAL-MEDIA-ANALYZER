@@ -21,30 +21,30 @@
 }
 
 .main-content {
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0rem 2rem;
+  padding: 1rem 1.5rem;
 }
 
 .main-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .main-header h1 {
-  font-size: 3rem;
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
   font-weight: 700;
   background: linear-gradient(135deg, var(--accent-color), #7BDCDA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .main-header p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--text-secondary);
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
@@ -52,26 +52,26 @@
 .nav-tabs {
   display: flex;
   background: var(--card-bg);
-  border-radius: 16px;
-  padding: 6px;
-  margin-bottom: 3rem;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 2rem;
   border: 1px solid var(--border-color);
-  max-width: 500px;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .nav-tab {
   flex: 1;
-  padding: 16px 32px;
+  padding: 12px 24px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 8px;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 
@@ -89,26 +89,26 @@
 .upload-section,
 .text-section {
   background: var(--card-bg);
-  border-radius: 20px;
-  padding: 2.5rem;
+  border-radius: 16px;
+  padding: 1.5rem;
   border: 1px solid var(--border-color);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   min-height: auto;
 }
 
 .file-upload-container {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .upload-zone {
   border: 2px dashed var(--border-color);
-  border-radius: 16px;
-  padding: 4rem 3rem;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   background: rgba(58, 80, 107, 0.3);
-  min-height: 300px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -184,14 +184,14 @@
   background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
   color: white;
   border: none;
-  padding: 16px 40px;
-  border-radius: 12px;
+  padding: 12px 24px;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-  min-width: 160px;
+  font-size: 0.95rem;
+  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.3);
+  min-width: 140px;
 }
 
 .analyze-btn:hover,
@@ -216,21 +216,21 @@
   margin-bottom: 0.5rem;
   font-weight: 600;
   color: var(--text-primary);
-  font-size: 20px;
+  font-size: 1.1rem;
 }
 
 .content-textarea {
   width: 100%;
-  min-height: 200px;
-  padding: 1.5rem;
+  min-height: 150px;
+  padding: 1rem;
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(--input-bg);
   color: var(--text-primary);
   font-family: inherit;
-  font-size: 3rem;
-  line-height: 1.4;
-  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-weight: 400;
   resize: vertical;
   transition: border-color 0.3s ease;
 }
@@ -389,4 +389,53 @@ body {
               radial-gradient(circle at 40% 40%, rgba(11, 19, 43, 0.1) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.5rem 1rem;
+  }
+  
+  .main-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .main-header p {
+    font-size: 0.9rem;
+  }
+  
+  .nav-tabs {
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  
+  .nav-tab {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .upload-section,
+  .text-section {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .upload-zone {
+    padding: 1.5rem 1rem;
+    min-height: 150px;
+  }
+  
+  .content-textarea {
+    min-height: 120px;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .analyze-btn,
+  .upload-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    min-width: 120px;
+  }
 }

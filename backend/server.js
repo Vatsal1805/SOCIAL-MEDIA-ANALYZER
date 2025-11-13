@@ -20,6 +20,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/analyze', require('./routes/analyze'));
 
+app.get("/", (req, res) => {
+  res.send("Social Media Analyzer backend is running!");
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ 
