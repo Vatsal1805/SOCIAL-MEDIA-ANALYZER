@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import axios from 'axios'
 
-const API_BASE_URL = 'https://social-media-analyzer-33hq.onrender.com/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://social-media-analyzer-33hq.onrender.com/api'
 
 const FileUpload = ({ onAnalysisComplete, onLoadingChange, loading }) => {
   const [files, setFiles] = useState([])
