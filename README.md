@@ -22,9 +22,11 @@ A full-stack application that analyzes social media content and provides AI-powe
 - Multer (file uploads)
 
 ### Frontend
-- Vanilla HTML/CSS/JavaScript
-- Font Awesome icons
+- React 18 + Vite
+- Modern component architecture
+- Professional Blue-Grey theme
 - Responsive design
+- Font Awesome icons
 
 ## 📦 Installation & Setup
 
@@ -46,7 +48,7 @@ A full-stack application that analyzes social media content and provides AI-powe
 
 3. Create `.env` file with your configuration:
    ```env
-   PORT=5000
+   PORT=3002
    NODE_ENV=development
    MONGODB_URI=your_mongodb_connection_string
    GEMINI_API_KEY=your_gemini_api_key
@@ -68,14 +70,19 @@ A full-stack application that analyzes social media content and provides AI-powe
    npm install
    ```
 
-3. Start the frontend server:
+3. Start the development server:
    ```bash
-   npm start
+   npm run dev
+   ```
+
+4. Build for production:
+   ```bash
+   npm run build
    ```
 
 ## 🎯 Usage
 
-1. **Start Backend**: Backend runs on `http://localhost:5000`
+1. **Start Backend**: Backend runs on `http://localhost:3002`
 2. **Start Frontend**: Frontend runs on `http://localhost:3000`
 3. **Analyze Content**: 
    - Use the text input tab to paste social media content
@@ -88,23 +95,35 @@ A full-stack application that analyzes social media content and provides AI-powe
 - `POST /api/upload` - Upload and extract text from files
 - `GET /api/analysis/history` - Get analysis history
 
-## 🎨 Screenshots
+## 🎨 Features
 
-The application features a modern, responsive design with:
-- Clean card-based layout
-- Interactive tabs for different input methods
-- Real-time analysis results
-- Beautiful data visualizations
-- Analysis history tracking
+The application features a modern, professional design with:
+- Clean, modern React component architecture
+- Professional Blue-Grey SaaS theme
+- Interactive tabs for text analysis and file upload
+- Real-time AI-powered content analysis
+- Responsive design for all devices
+- Clean loading animations and status indicators
 
 ## 🔧 Development
 
-The app currently uses a mock AI service that provides realistic responses. This allows for full development and testing without requiring a working Gemini API key.
+### AI Service
+The app uses Google Gemini AI API for content analysis with fallback models for reliability. If the API key is not provided or fails, it automatically falls back to a mock AI service for development.
 
-To switch to real Gemini AI:
-1. Get a valid API key from Google AI Studio
-2. Update the `.env` file
-3. The app will automatically use the real API
+### Project Structure
+```
+├── backend/              # Node.js + Express API
+│   ├── config/          # Database and AI configuration
+│   ├── controllers/     # Request handlers
+│   ├── models/          # MongoDB schemas
+│   ├── routes/          # API endpoints
+│   └── services/        # Business logic
+└── frontend/            # React + Vite app
+    ├── src/
+    │   ├── components/  # React components
+    │   └── services/    # API integration
+    └── public/          # Static assets
+```
 
 ## 📝 License
 
